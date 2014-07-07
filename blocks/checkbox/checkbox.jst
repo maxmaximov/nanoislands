@@ -2,29 +2,46 @@
 var nb = ['checkbox'];
 var classes = ['nb-checkbox', '_init'];
 var attrs = {};
+var uniq;
 
-if (!data.type) { data.type = 'checkbox'; }
-attrs.type = data.type;
+data.type = data.type || 'checkbox';
+data.size = data.size || 'm';
 
-if (!data.id) {
-    data.id = JST._uniq({prefix: 'nb-checkbox_'});
+if (data.id) {
+    uniq = 'nb-checkbox_' + data.id;
+} else {
+    uniq = JST._uniq({prefix: 'nb-checkbox_'});
 }
 
-classes.push('nb-checkbox_size_' + (data.size || 'm'));
+attrs.for = uniq;
+
+classes.push('nb-checkbox_size_' + data.size);
 classes.push('nb-checkbox_type_' + data.type);
 
 if (data.disabled) {
     classes.push('nb-checkbox_disabled');
-    attrs.disabled = 'disabled';
 }
 
-if (data.checked) {
-    attrs.checked = 'checked';
-}
+%><label <%= JST._attrs({ source: data, nb: nb, classes: classes, attrs: attrs }) %>><%
 
-%><label <%= JST._attrs({ classes: classes, attrs: {'for': data.id}}) %>><%
+    classes = ['nb-checkbox__input'];
+    attrs = {};
 
-    %><input <%= JST._attrs({ source: data, classes: ['nb-checkbox__input'], attrs: attrs}) %> data-nb /><%
+    attrs.type = data.type;
+
+    if (data.name) {
+        attrs.name = data.name;
+    }
+
+    if (data.disabled) {
+        attrs.disabled = 'disabled';
+    }
+
+    if (data.checked) {
+        attrs.checked = 'checked';
+    }
+
+    %><input <%= JST._attrs({ source: { id: uniq }, classes: classes, attrs: attrs }) %> /><%
 
     %><span class="nb-checkbox__flag nb-checkbox__flag_type_<%=data.type%>"><%
         %><span class="nb-checkbox__flag__icon"></span><%
